@@ -15,7 +15,7 @@ function Register() {
                     className="bg-[#111] h-[650px] rounded-3xl flex flex-col items-center gap-4"
                     style={{ padding: "30px 40px" }}
                 >
-                    <h1 className="text-white text-4xl font-medium ">
+                    <h1 className="text-white text-4xl font-medium mt-10 ">
                         Let’s Get Started
                     </h1>
                     <p className="text-[#EAEAEF] text-center text-base font-medium flex flex-col justify-center w-[388px]">
@@ -31,7 +31,7 @@ function Register() {
                             Get Started
                         </button>
                     </Link>
-                    <p className="text-white">
+                    {/* <p className="text-white">
                         ----------------OR----------------
                     </p>
                     <button
@@ -71,7 +71,7 @@ function Register() {
                             />
                         </svg>
                         <span>Continue with Gmail</span>
-                    </button>
+                    </button> */}
                     <p className="text-white mt-4 mb-4">Sign up later</p>
                     <h3 className="text-white text-[30px] font-medium">
                         Full contactless experience

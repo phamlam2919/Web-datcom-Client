@@ -7,11 +7,11 @@ function Profile() {
         <div>
             <Header />
             <div
-                className="bg-[#eee] flex justify-center gap-5"
+                className=" flex justify-center gap-5"
                 style={{ padding: "60px 60px" }}
             >
                 <>
-                    <div className="bg-white w-[20%] p-6 rounded-lg shadow-md">
+                    <div className="bg-[#eee] w-[20%] p-6 rounded-lg shadow-md">
                         <div className="w-24 h-24 rounded-full overflow-hidden mx-auto">
                             <img
                                 src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
@@ -35,7 +35,7 @@ function Profile() {
                             </button>
                         </div>
                     </div>
-                    <div className="bg-white w-[40%] p-6 rounded-lg shadow-md">
+                    <div className="bg-[#eee] w-[40%] p-6 rounded-lg shadow-md">
                         <div className="flex gap-4 mb-4">
                             <p className="font-semibold w-[100px]">
                                 Full Name:
@@ -62,7 +62,7 @@ function Profile() {
                 </>
             </div>
             <div
-                className="bg-[#eee]"
+                className=""
                 style={{
                     padding: "0px 60px 60px",
                 }}
@@ -89,7 +89,7 @@ function Profile() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr className="bg-[#eee] border-b ">
+                            <tr className=" border-b ">
                                 <th
                                     scope="row"
                                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
@@ -100,7 +100,7 @@ function Profile() {
                                 <td className="px-6 py-4">Laptop</td>
                                 <td className="px-6 py-4">$2999</td>
                             </tr>
-                            <tr className="bg-[#eee] border-b ">
+                            <tr className=" border-b ">
                                 <th
                                     scope="row"
                                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "

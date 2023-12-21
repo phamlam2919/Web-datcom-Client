@@ -13,7 +13,7 @@ function Homepage() {
             <div className="relative">
                 <Homepage2 />
                 <div
-                    className="absolute top-0 left-0"
+                    className="absolute top-0 left-0 w-full"
                     style={{ padding: "0 150px" }}
                 >
                     <h1 className="text-4xl font-semibold mb-4 mt-5">
@@ -23,10 +23,9 @@ function Homepage() {
                         Thương hiệu đa dạng, thỏa sức lựa chọn!
                     </h2>
 
-                    <div className="flex gap-11">
-                        <Link to="/order">
-                            {" "}
-                            <div className="max-w-[370px] bg-white border border-gray-200 rounded-lg shadow dark:bg-[#FFFFFF] mt-10">
+                    <div className="flex justify-between gap-5">
+                        <div className="max-w-[330px] bg-white border border-gray-200 rounded-lg shadow dark:bg-[#FFFFFF] mt-10">
+                            <Link to="/order">
                                 <div>
                                     <img
                                         className="rounded-t-lg"
@@ -54,10 +53,10 @@ function Homepage() {
                                         phong phú giúp mọi người gần nhau hơn.
                                     </p>
                                 </div>
-                            </div>
-                        </Link>
+                            </Link>
+                        </div>
 
-                        <div className="max-w-[370px] bg-white border border-gray-200 rounded-lg shadow dark:bg-[#FFFFFF] mt-10">
+                        <div className="max-w-[330px] bg-white border border-gray-200 rounded-lg shadow dark:bg-[#FFFFFF] mt-10">
                             <a href="#">
                                 <img
                                     className="rounded-t-lg"
@@ -87,7 +86,36 @@ function Homepage() {
                             </div>
                         </div>
 
-                        <div className="max-w-[370px] bg-white border border-gray-200 rounded-lg shadow dark:bg-[#FFFFFF] mt-10">
+                        <div className="max-w-[330px] bg-white border border-gray-200 rounded-lg shadow dark:bg-[#FFFFFF] mt-10">
+                            <a href="#">
+                                <img
+                                    className="rounded-t-lg"
+                                    src="https://images.deliany.co/hc-RWIJNJN5VoTqaV9pCniqjbtqBdCfWH85q_a8j2AU/rs:fill:1000:600:false/g:ce:0:0/czM6Ly9tYWZmaWFjby1jYXJhdmFuLWltYWdlcy1wcm9kdWN0aW9uL2F0dGFjaG1lbnRzL2I3YzM0YmY0LWY2NzgtNDE0Ni1iMWVlLTZiNTkwZmU4Mzk2MC0zNzk5NDE0NzktNjk4MTE1MTM5MDE3ODY0LTUyNzcyOTgzODg0OTU0Mjc1Mjctbi5qcGc.jpg"
+                                    alt=""
+                                />
+                            </a>
+                            <div className="p-5">
+                                <p className="flex items-center gap-3 mb-3">
+                                    <div className="w-10 h-10">
+                                        <img
+                                            className="rounded-full"
+                                            src="https://images.deliany.co/KZZ0BvWhiZ8ax59O1fzK4a2mDAhzxZvv43Zv7TiMXMM/rs:fill:300:300:false/g:ce:0:0/czM6Ly9tYWZmaWFjby1jYXJhdmFuLWltYWdlcy1wcm9kdWN0aW9uL2F0dGFjaG1lbnRzLzcxOThmOGI0LWRlNDgtNGQ1ZS1hZTEwLTA1ODY3NjU0ZjdmYS16dW13aGVyZS1sb2dvLTIuanBn.jpg"
+                                            alt=""
+                                        />
+                                    </div>
+                                    <h5 className="mb-2 text-xl font-bold tracking-tight ">
+                                        Zumwhere
+                                    </h5>
+                                </p>
+                                <p className="mb-3 font-normal text-sm text-[#596a4d]">
+                                    Zumwhere - nơi bắt đầu cuộc vui sau giờ làm
+                                    với những món ăn fusion đa dạng, những ly
+                                    bia thủ công, rượu và cocktail phong phú
+                                    giúp mọi người gần nhau hơn.
+                                </p>
+                            </div>
+                        </div>
+                        <div className="max-w-[330px] bg-white border border-gray-200 rounded-lg shadow dark:bg-[#FFFFFF] mt-10">
                             <a href="#">
                                 <img
                                     className="rounded-t-lg"
