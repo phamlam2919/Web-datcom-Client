@@ -12,7 +12,7 @@ const items = [
     },
     {
         label: (
-            <Link to="/register1">
+            <Link to="/register">
                 <p>Đăng ký</p>
             </Link>
         ),
