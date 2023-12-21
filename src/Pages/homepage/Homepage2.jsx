@@ -4,13 +4,12 @@ function Homepage2() {
     return (
         <div>
             <svg
-                style={{ width: "100%" }}
                 height={1700}
                 fill="none"
                 viewBox="0 0 1600 3098"
                 xmlns="http://www.w3.org/2000/svg"
                 preserveAspectRatio="xMidYMax slice"
-                className="sc-cwSeag htnabo"
+                className="sc-cwSeag htnabo w-full"
             >
                 <path
                     d="M1600 0H0v1696.47h1600V0Z"

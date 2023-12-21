@@ -5,13 +5,13 @@ import image from "../register/image.jpg";
 function Register1() {
     return (
         <div
-            className="flex "
+            className="flex h-screen"
             style={{
                 background: `url(${image}) lightgray 50% / cover no-repeat`,
             }}
         >
             <div className="w-1/2"></div>
-            <div className="w-1/2 p-[30px]">
+            <div className="w-1/2 p-[30px] flex items-center">
                 <div
                     className="bg-[#111] h-[ ] rounded-3xl flex flex-col items-center gap-4"
                     style={{ padding: "30px 40px" }}
@@ -28,7 +28,7 @@ function Register1() {
                         className="h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] "
                         style={{ padding: "12px 16px" }}
                         placeholder="Username"
-                    /> 
+                    />
                     <input
                         type="email"
                         className="h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] "

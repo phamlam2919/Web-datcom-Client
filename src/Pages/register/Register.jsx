@@ -4,13 +4,13 @@ import { Link } from "react-router-dom";
 function Register() {
     return (
         <div
-            className="flex w-full h-full"
+            className="flex h-screen"
             style={{
                 background: `url(${image}) lightgray 50% / cover no-repeat`,
             }}
         >
             <div className="w-1/2"></div>
-            <div className="w-1/2 p-[30px]">
+            <div className="w-1/2 p-[30px] flex items-center">
                 <div
                     className="bg-[#111] h-[650px] rounded-3xl flex flex-col items-center gap-4"
                     style={{ padding: "30px 40px" }}

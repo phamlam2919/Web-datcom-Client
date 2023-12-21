@@ -4,13 +4,13 @@ import image2 from "../register/image2.png";
 function Register2() {
     return (
         <div
-            className="flex "
+            className="flex h-screen"
             style={{
                 background: `url(${image2}) lightgray 50% / cover no-repeat`,
             }}
         >
             <div className="w-1/2"></div>
-            <div className="w-1/2 p-[30px]">
+            <div className="w-1/2 p-[30px] flex items-center">
                 <div
                     className="bg-[#111] h-[650px] rounded-3xl flex flex-col items-center gap-4"
                     style={{ padding: "30px 40px" }}

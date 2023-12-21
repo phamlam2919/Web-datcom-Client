@@ -5,13 +5,12 @@ function Homepage1() {
         <div>
             <div className="relative">
                 <svg
-                    style={{ width: "100%" }}
                     height={400}
                     viewBox="0 0 1600 761"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                     preserveAspectRatio="xMinYMax slice"
-                    className="sc-cwSeag heKkpw"
+                    className="sc-cwSeag heKkpw w-full"
                 >
                     <g clipPath="url(#chrismas-landing-hero-a)">
                         <path
