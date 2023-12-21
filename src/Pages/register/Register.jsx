@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 function Register() {
     return (
         <div
-            className="flex "
+            className="flex w-full h-full"
             style={{
                 background: `url(${image}) lightgray 50% / cover no-repeat`,
             }}

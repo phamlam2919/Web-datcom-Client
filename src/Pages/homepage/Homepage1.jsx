@@ -1,9 +1,11 @@
 import React from "react";
 
 function Homepage1() {
-    return <div><div className="relative">
+    return (
+        <div>
+            <div className="relative">
                 <svg
-                    width={1600}
+                    style={{ width: "100%" }}
                     height={400}
                     viewBox="0 0 1600 761"
                     fill="none"
@@ -267,8 +269,9 @@ function Homepage1() {
                     <b>Khám phá ngay</b>{" "}
                     <i className="fa-solid fa-arrow-right mt-1"></i>
                 </button>
-            
-            </div></div>;
+            </div>
+        </div>
+    );
 }
 
 export default Homepage1;

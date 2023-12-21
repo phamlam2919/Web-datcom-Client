@@ -4,7 +4,7 @@ function Homepage2() {
     return (
         <div>
             <svg
-                width={1600}
+                style={{ width: "100%" }}
                 height={1700}
                 fill="none"
                 viewBox="0 0 1600 3098"
