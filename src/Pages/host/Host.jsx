@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { message, Upload } from "antd";
 import { Button, Modal } from "antd";
+import { Link } from "react-router-dom";
 const getBase64 = (img, callback) => {
     const reader = new FileReader();
     reader.addEventListener("load", () => callback(reader.result));
@@ -89,8 +90,16 @@ function Host() {
                                 Thêm mới món ăn
                             </h1>
                         </Button>
+                        <Link to="/host1">
+                            <button
+                                className=" text-xl font-bold uppercase rounded-md p-1 w-[450px] "
+                                style={{ border: "1px solid black" }}
+                            >
+                                Danh sách người dùng đặt món ăn
+                            </button>
+                        </Link>
                     </div>
-                    <div className="flex gap-6 flex-wrap">
+                    <div className="flex gap-6 flex-wrap mb-10">
                         <div className="w-[330px] bg-white border border-gray-200 rounded-lg shadow dark:bg-[#FFFFFF] mt-10">
                             <div className="w-full h-[246px]">
                                 <img
@@ -163,57 +172,7 @@ function Host() {
                     </div>
                 </div>
             </div>
-            <div
-                className=""
-                style={{
-                    padding: "60px 60px",
-                }}
-            >
-                <div className="relative overflow-x-auto">
-                    <table className="w-full text-sm text-left rtl:text-right  ">
-                        <thead className="text-xs  uppercase border-b">
-                            <tr>
-                                <th scope="col" className="px-6 py-3">
-                                    Product name
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Color
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Category
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Price
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr className="bg-white border-b ">
-                                <th
-                                    scope="row"
-                                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-                                >
-                                    Apple MacBook Pro 17"
-                                </th>
-                                <td className="px-6 py-4">Silver</td>
-                                <td className="px-6 py-4">Laptop</td>
-                                <td className="px-6 py-4">$2999</td>
-                            </tr>
-                            <tr className="bg-white border-b ">
-                                <th
-                                    scope="row"
-                                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-                                >
-                                    Microsoft Surface Pro
-                                </th>
-                                <td className="px-6 py-4">White</td>
-                                <td className="px-6 py-4">Laptop PC</td>
-                                <td className="px-6 py-4">$1999</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+
             <Footer />
             <Modal
                 open={isModalOpen1}
@@ -228,7 +187,7 @@ function Host() {
                     <div>
                         <textarea
                             id="message"
-                            rows={10}
+                            rows={5}
                             className="w-full block p-2.5 text-sm text-gray-200 bg-gray-50 rounded-lg border  dark:border-gray-600 dark:placeholder-gray-400 dark:text-black "
                             placeholder="Write your thoughts here..."
                             defaultValue={""}
@@ -242,33 +201,55 @@ function Host() {
                             style={{ border: "1px solid black" }}
                         />
                     </div>
-                    <div className="flex gap-5 items-center">
-                        <>
-                            <Upload
-                                name="avatar"
-                                listType="picture-circle"
-                                className="avatar-uploader mt-5"
-                                showUploadList={false}
-                                action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-                                beforeUpload={beforeUpload}
-                                onChange={handleChange}
-                            >
-                                {imageUrl ? (
-                                    <img
-                                        src={imageUrl}
-                                        alt="avatar"
-                                        style={{
-                                            width: "100%",
-                                        }}
-                                    />
-                                ) : (
-                                    uploadButton
-                                )}
-                            </Upload>
-                        </>
-                        <button className="text-white bg-[#E25319] w-[150px] rounded-2xl h-[54px]">
-                            Lưu
-                        </button>
+                    <div className="">
+                        <Upload
+                            name="avatar"
+                            listType="picture-circle"
+                            className="avatar-uploader mt-5 w-[100px]"
+                            showUploadList={false}
+                            action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+                            beforeUpload={beforeUpload}
+                            onChange={handleChange}
+                        >
+                            {imageUrl ? (
+                                <img
+                                    src={imageUrl}
+                                    alt="avatar"
+                                    style={{
+                                        width: "100%",
+                                    }}
+                                />
+                            ) : (
+                                uploadButton
+                            )}
+                        </Upload>
+                    </div>
+                    <div className="flex gap-5 w-full  mt-3 mb-3 flex-wrap">
+                        <img
+                            className="w-[45%]"
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuuII-gcB7vnNGai3UjeD9k6laxIF1zo6Spg&usqp=CAU"
+                            alt=""
+                        />
+                        <img
+                            className="w-[45%]"
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuuII-gcB7vnNGai3UjeD9k6laxIF1zo6Spg&usqp=CAU"
+                            alt=""
+                        />
+                        <img
+                            className="w-[45%]"
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuuII-gcB7vnNGai3UjeD9k6laxIF1zo6Spg&usqp=CAU"
+                            alt=""
+                        />
+                        <img
+                            className="w-[45%]"
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuuII-gcB7vnNGai3UjeD9k6laxIF1zo6Spg&usqp=CAU"
+                            alt=""
+                        />
+                        <img
+                            className="w-[45%]"
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuuII-gcB7vnNGai3UjeD9k6laxIF1zo6Spg&usqp=CAU"
+                            alt=""
+                        />
                     </div>
                 </div>
             </Modal>

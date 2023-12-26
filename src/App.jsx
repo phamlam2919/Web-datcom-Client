@@ -8,6 +8,9 @@ import Homepage from "./Pages/homepage/Homepage";
 import Host from "./Pages/host/Host";
 import Order from "./Pages/order/Order";
 import Profile from "./Pages/profile/Profile";
+import Debt from "./Pages/debt/Debt";
+import Host1 from "./Pages/host/Host1";
+import Payment from "./Pages/payment/Payment";
 
 function App() {
     return (
@@ -19,8 +22,11 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/" element={<Homepage />} />
                 <Route path="/host" element={<Host />} />
+                <Route path="/host1" element={<Host1 />} />
                 <Route path="/order" element={<Order />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/debt" element={<Debt />} />
+                <Route path="/payment" element={<Payment />} />
             </Routes>
         </>
     );
