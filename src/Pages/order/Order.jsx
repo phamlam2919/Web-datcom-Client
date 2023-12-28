@@ -2,6 +2,7 @@ import React from "react";
 import Header from "../../Commons/header/Header";
 import { InputNumber } from "antd";
 import Footer from "../../Commons/footer/Footer";
+import { Link } from "react-router-dom";
 
 function Order() {
     const onChange = (value) => {
@@ -53,12 +54,15 @@ function Order() {
                                                 Bánh mì thịt
                                             </h4>
                                             <p className="mt-1 mb-1">20.000đ</p>
-                                            <InputNumber
-                                                min={1}
-                                                max={10}
-                                                defaultValue={1}
-                                                onChange={onChange}
-                                            />
+                                            <div className="flex gap-10">
+                                                <InputNumber
+                                                    min={1}
+                                                    max={10}
+                                                    defaultValue={1}
+                                                    onChange={onChange}
+                                                />
+                                                <i className=" text-xl fa-solid fa-utensils hover:text-red-500"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -83,12 +87,15 @@ function Order() {
                                                 Phở bò Việt Nam
                                             </h4>
                                             <p className="mt-1 mb-1">50.000đ</p>
-                                            <InputNumber
-                                                min={1}
-                                                max={10}
-                                                defaultValue={1}
-                                                onChange={onChange}
-                                            />
+                                            <div className="flex gap-10">
+                                                <InputNumber
+                                                    min={1}
+                                                    max={10}
+                                                    defaultValue={1}
+                                                    onChange={onChange}
+                                                />
+                                                <i className=" text-xl fa-solid fa-utensils hover:text-red-500"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -113,12 +120,15 @@ function Order() {
                                                 Phở bò Việt Nam
                                             </h4>
                                             <p className="mt-1 mb-1">50.000đ</p>
-                                            <InputNumber
-                                                min={1}
-                                                max={10}
-                                                defaultValue={1}
-                                                onChange={onChange}
-                                            />
+                                            <div className="flex gap-10">
+                                                <InputNumber
+                                                    min={1}
+                                                    max={10}
+                                                    defaultValue={1}
+                                                    onChange={onChange}
+                                                />
+                                                <i className=" text-xl fa-solid fa-utensils hover:text-red-500"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -170,6 +180,14 @@ function Order() {
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div className="w-full flex justify-end">
+                        <Link to="/payment">
+                            {" "}
+                            <button className="bg-blue-500 text-white px-4 py-2 rounded mt-5 flex justify-end">
+                                Thanh toán
+                            </button>
+                        </Link>
                     </div>
                 </div>
             </div>

@@ -2,7 +2,7 @@ import React from "react";
 
 function Footer() {
     return (
-        <div className="  bg-[#e8f0fe]" style={{ padding: "30px 150px" }}>
+        <div className="  bg-[#e8f0fe]" style={{ padding: "60px 60px" }}>
             <div>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"

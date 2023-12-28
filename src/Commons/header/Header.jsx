@@ -84,10 +84,14 @@ function Header() {
                 </Link>
             </div>
             <div className="flex justify-between items-center gap-10">
-                <h1 className="text-xl font-semibold">Trang chủ</h1>
-                <Link to="/host">
-                    <h1 className="text-xl font-semibold">Quản lý</h1>
+                <Link to="/">
+                    <h1 className="text-xl font-semibold cursor-pointer">
+                        Trang chủ
+                    </h1>
                 </Link>
+                {/* <Link to="/host">
+                    <h1 className="text-xl font-semibold">Quản lý</h1>
+                </Link> */}
                 <form>
                     <label
                         htmlFor="default-search"
