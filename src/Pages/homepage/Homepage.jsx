@@ -9,12 +9,26 @@ import instance from "../../api/axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-
 function Homepage() {
-
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-
+  const idUser = localStorage.getItem("idUser");
+  const [profileUser, setProfileUser] = useState("");
+  const loadUser = () => {
+    const headers = { Authorization: `Bearer ${token}` };
+    instance
+      .get(`users/${idUser}`, { headers })
+      .then((res) => {
+        // console.log(res.data);
+        setProfileUser(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  useEffect(() => {
+    loadUser();
+  }, []);
 
   const loadHost = async () => {
     if (!token) {
@@ -34,6 +48,8 @@ function Homepage() {
           navigate("/login");
         }, 2000);
         localStorage.removeItem("token");
+        localStorage.removeItem("idUser");
+        // localStorage.removeItem("userName");
       }
     }
   };
@@ -45,7 +61,6 @@ function Homepage() {
     }
   }, [token, navigate]);
 
-
   return (
     <>
       <ToastContainer
@@ -56,9 +71,7 @@ function Homepage() {
         draggable={false}
       />
       <div>
-        <Header
-        // userName={users.userName}
-        />
+        <Header profileUser={profileUser} />
         <Homepage1 />
         <div className="relative">
           <Homepage2 />

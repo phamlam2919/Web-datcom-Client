@@ -6,6 +6,9 @@ import { Input, Modal } from "antd";
 import instance from "../../api/axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { store } from "../../firebase/upload";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
 
 function Profile() {
   const idUser = localStorage.getItem("idUser");
@@ -13,7 +16,13 @@ function Profile() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
+  const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [profileUser, setProfileUser] = useState("");
+  const [updateUserName, setUpdateUserName] = useState("");
+  const [imageUrls, setImageUrls] = useState([]);
+  const [downloadUrls, setDownloadUrls] = useState([]);
+
+  const [errors, setErrors] = useState({});
   const [changePasswords, setChangePasswords] = useState({
     email: "",
     passwords: "",
@@ -35,6 +44,10 @@ function Profile() {
       });
   };
 
+  useEffect(() => {
+    loadUser();
+  }, []);
+
   const changePassword = (e) => {
     setChangePasswords({ ...changePasswords, [e.target.name]: e.target.value });
   };
@@ -46,16 +59,54 @@ function Profile() {
     }));
   }, [profileUser]);
 
-  useEffect(() => {
-    loadUser();
-  }, []);
-
   const showModal = () => {
     setIsModalOpen(true);
   };
+
+  // update user name
   const handleOk = () => {
-    setIsModalOpen(false);
+    if (!updateUserName) {
+      setErrors({ message: "Không được để trống" });
+      return;
+    }
+    if (
+      updateUserName.length < 5 ||
+      updateUserName[0] !== updateUserName[0].toUpperCase()
+    ) {
+      setErrors({
+        message:
+          "Username phải có ít nhất 5 kí tự và bắt đầu bằng chữ cái viết hoa",
+      });
+      return;
+    }
+
+    const nameUpdate = {
+      userName: updateUserName,
+    };
+    instance
+      .patch(`users/updateUserName/${idUser}`, nameUpdate)
+      .then((res) => {
+        setProfileUser((prevUser) => ({
+          ...prevUser,
+          userName: updateUserName,
+        }));
+        setIsModalOpen(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
+
+  // update avatar
+  const handleChangeInput = (e) => {
+    const files = Array.from(e.target.files);
+    setImageUrls(files);
+
+    const tempUrls = files.map((file) => URL.createObjectURL(file));
+    // setTempImageUrls(tempUrls);
+    setDownloadUrls(tempUrls);
+  };
+
   const handleCancel = () => {
     setIsModalOpen(false);
   };
@@ -64,14 +115,72 @@ function Profile() {
     setIsModalOpen1(true);
   };
   const handleOk1 = () => {
-    setIsModalOpen1(false);
-    if (newPassword !== confirmNewPassword){
-      console.log("pw ko trung");
+    if (newPassword !== confirmNewPassword) {
+      toast.warning("Mật khẩu không trùng khớp");
+      return;
+    } else {
+      const headers = { Authorization: `Bearer ${token}` };
+      const formChangePassword = {
+        email: profileUser.email,
+        passwords,
+        newPassword,
+      };
+      instance
+        .post("users/changePassword", formChangePassword, { headers })
+        .then((res) => {
+          console.log(res);
+          setIsModalOpen1(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.warning(err.response.data.message);
+        });
     }
-    console.log("changePasswords:", changePasswords);
   };
   const handleCancel1 = () => {
     setIsModalOpen1(false);
+  };
+
+  const showModal2 = () => {
+    setIsModalOpen2(true);
+  };
+
+  // update avatar
+  const handleOk2 = () => {
+    Promise.all(
+      imageUrls.map((file) => {
+        const imageRef = ref(store, `imagesUsers/${file.name + uuidv4()}`);
+        return uploadBytes(imageRef, file).then((value) => {
+          return getDownloadURL(value.ref);
+        });
+      })
+    ).then((response) => {
+      // Cập nhật state downloadUrls với mảng đường link của ảnh
+      setDownloadUrls(response);
+
+      // Tiếp tục thực hiện lưu dữ liệu hoặc các thao tác khác theo nhu cầu của bạn
+      const formUpload = {
+        avatarUser: response, // Cập nhật avatarUser với mảng đường link của ảnh
+      };
+
+      if (imageUrls.length > 0) {
+        instance
+          .patch(`users/updateAvatarUser/${idUser}`, formUpload)
+          .then((res) => {
+            console.log(res.data);
+            setProfileUser((prevUser) => ({
+              ...prevUser,
+              avatarUser: response, // Cập nhật avatarUser với mảng đường link của ảnh
+            }));
+            setIsModalOpen2(false);
+          })
+          .catch((err) => console.log(err));
+      }
+    });
+  };
+
+  const handleCancel2 = () => {
+    setIsModalOpen2(false);
   };
   return (
     <div>
@@ -82,25 +191,35 @@ function Profile() {
         pauseOnHover
         draggable={false}
       />
-      <Header />
+      <Header profileUser={profileUser} />
       <div
         className=" flex justify-center gap-5"
         style={{ padding: "60px 60px" }}
       >
         <>
           <div className="bg-[#eee] w-[30%] p-6 rounded-lg shadow-md">
-            <div className="w-24 h-24 rounded-full overflow-hidden mx-auto">
-              <img
-                src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
-                alt=""
-                className="w-full h-full object-cover"
-              />
+            <div className="relative">
+              <div className="w-24 h-24 rounded-full overflow-hidden mx-auto">
+                <img
+                  src={profileUser?.avatarUser}
+                  alt=""
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              {/* update image */}
+              <div className="absolute bottom-2 left-[54%] flex items-center">
+                <div className="flex items-center justify-center w-6 h-6 p-3 border-2 border-gray-300  rounded-full cursor-pointer bg-gray-300 hover:bg-white ">
+                  <div className="flex items-center justify-center">
+                    <i onClick={showModal2} className="fa-solid fa-camera"></i>
+                  </div>
+                </div>
+              </div>
             </div>
-            <h5 className="text-xl mt-4 text-center">John Smith</h5>
-            <p className="text-center text-gray-500">Full Stack Developer</p>
-            <p className="text-center text-gray-500">
-              Bay Area, San Francisco, CA
-            </p>
+
+            <h5 className="text-xl mt-4 text-center">
+              {profileUser?.userName}
+            </h5>
+
             <div className="mt-4 flex justify-center flex-wrap ">
               <button
                 onClick={showModal}
@@ -116,6 +235,7 @@ function Profile() {
               </button>
             </div>
           </div>
+          {/* render thông tin của user */}
           <div className="flex flex-col justify-between bg-[#eee] w-[40%] p-6 rounded-lg shadow-md">
             <div>
               <div className="flex gap-4 mb-4">
@@ -147,7 +267,7 @@ function Profile() {
           </div>
         </>
       </div>
-
+      {/* update user name */}
       <Modal
         open={isModalOpen}
         onOk={handleOk}
@@ -159,23 +279,20 @@ function Profile() {
             Chỉnh sửa thông tin
           </h1>
           <div className="mb-3">
-            <h2 className="text-lg mb-1">Họ và tên:</h2>
-            <Input placeholder="Họ và tên" />
-          </div>
+            <h2 className="text-lg mb-1">User Name:</h2>
+            <Input
+              placeholder="Họ và tên"
+              value={updateUserName}
+              name="userName"
+              onChange={(e) => setUpdateUserName(e.target.value)}
+              className={`rounded-md outline-blue-500 w-full h-9 px-2 border border-slate-500 ${
+                errors.message
+                  ? "border border-red-500 shadow-sm shadow-red-800"
+                  : ""
+              }`}
+            />
 
-          <div className="mb-3">
-            <h2 className="text-lg mb-1">Email:</h2>
-            <Input placeholder="Email" />
-          </div>
-
-          <div className="mb-3">
-            <h2 className="text-lg mb-1">Số điện thoại:</h2>
-            <Input placeholder="Số điện thoại" />
-          </div>
-
-          <div className="mb-7">
-            <h2 className="text-lg mb-1">Địa chỉ:</h2>
-            <Input placeholder="Địa chỉ" />
+            {errors.message && <p className="text-red-500">{errors.message}</p>}
           </div>
         </div>
       </Modal>
@@ -213,6 +330,67 @@ function Profile() {
               value={confirmNewPassword}
             />
           </div>
+        </div>
+      </Modal>
+
+      {/* update image */}
+      <Modal
+        open={isModalOpen2}
+        onOk={handleOk2}
+        onCancel={handleCancel2}
+        okButtonProps={{ className: "bg-blue-500" }}
+      >
+        <div>Tải ảnh lên</div>
+        <div className="w-24 h-24 rounded-full overflow-hidden mx-auto">
+          {/* {downloadUrls.map((url, index) => ( */}
+          {downloadUrls == 0 ? (
+            <img
+              src={profileUser?.avatarUser}
+              alt=""
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <img className="w-full h-full" src={downloadUrls} alt="" />
+          )}
+
+          {/* ))} */}
+        </div>
+        <div className="flex items-center justify-center w-full">
+          <label
+            htmlFor="dropzone-file"
+            className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+          >
+            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+              <svg
+                className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 20 16"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                />
+              </svg>
+              <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                <span className="font-semibold">Click to upload</span> or drag
+                and drop
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                SVG, PNG, JPG or GIF (MAX. 800x400px)
+              </p>
+            </div>
+            <input
+              onChange={handleChangeInput}
+              id="dropzone-file"
+              type="file"
+              className="hidden"
+            />
+          </label>
         </div>
       </Modal>
 

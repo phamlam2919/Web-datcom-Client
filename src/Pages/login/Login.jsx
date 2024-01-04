@@ -4,19 +4,63 @@ import image2 from "../login/image2.png";
 import instance from "../../api/axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Modal } from "antd";
 
 function Login() {
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({});
+  console.log("errors:", errors);
   const [signin, setSignin] = useState({
     email: "",
     passwords: "",
   });
+  const [resetPassword, setResetPassword] = useState("");
 
   const { email, passwords } = signin;
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    if (!resetPassword) {
+      setErrors({ message: "Email không được để trống" });
+      return;
+    }
+    if (!emailPattern.test(resetPassword)) {
+      setErrors({ message: "Email không đúng định dạng." });
+      return;
+    }
+
+    const rspw = {
+      email: resetPassword,
+    };
+    console.log(rspw);
+    instance
+      .post("users/resetPassword", rspw)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
   const togglePassword = () => {
     setShowPassword(!showPassword);
+  };
+
+  const register = () => {
+    navigate("/register1");
+  };
+
+  const homePage = () => {
+    navigate("/");
   };
 
   const handleChange = (e) => {
@@ -28,21 +72,20 @@ function Login() {
     instance
       .post("auth/signin", signin)
       .then((res) => {
-        localStorage.setItem("userName",res.data.signinResult.user.userName);
-        localStorage.setItem("idUser",res.data.signinResult.user.idUser);
+        localStorage.setItem("idUser", res.data.signinResult.user.idUser);
         localStorage.setItem("token", res.data.signinResult.accessToken),
           toast.success(res.data.message);
-        setTimeout(() => {
-          navigate("/",);
-        }, 1500);
+
+        navigate("/");
       })
       .catch((err) => {
-        console.log(err);
-        toast.warning(err.response.data.message);
+        console.log(err.response.data.errors);
+        setErrors(err.response.data.errors)
+        // toast.warning(err.response.data.message);
         if (err.response.data.message === "Tài khoản của bạn chưa xác thực") {
-          setTimeout(() => {
-            navigate("/register2", { state: { email: signin.email } });
-          }, 2000);
+          // setTimeout(() => {
+          navigate("/register2", { state: { email: signin.email } });
+          // }, 2000);
         }
       });
   };
@@ -84,10 +127,18 @@ function Login() {
                   name="email"
                   value={email}
                   onChange={handleChange}
-                  className="h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] "
+                  // className="h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] "
+                  className={`h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px]  ${
+                    errors.email
+                      ? "border border-red-500 shadow-sm shadow-red-800"
+                      : ""
+                  }`}
                   style={{ padding: "12px 16px" }}
                   placeholder="Enter your email"
                 />
+                 {errors.email && (
+                    <p className="text-red-500">{errors.email}</p>
+                  )}
               </div>
 
               <div className="relative">
@@ -96,7 +147,12 @@ function Login() {
                   name="passwords"
                   value={passwords}
                   onChange={handleChange}
-                  className="h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] "
+                  // className="h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] "
+                  className={`h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px]  ${
+                    errors.passwords
+                      ? "border border-red-500 shadow-sm shadow-red-800"
+                      : ""
+                  }`}
                   style={{ padding: "12px 16px" }}
                   placeholder="Password"
                 />
@@ -110,16 +166,56 @@ function Login() {
                     <i className="fa-regular fa-eye-slash text-gray-200"></i>
                   )}
                 </div>
+                {errors.passwords && (
+                    <p className="text-red-500">{errors.passwords}</p>
+                  )}
               </div>
 
-              {/* <Link to="/"> */}
+              <div className="flex justify-between items-center text-white  w-full">
+                <div className="flex items-center gap-1">
+                  <span>Do not have an account?</span>{" "}
+                  <span
+                    className="cursor-pointer text-orange-300"
+                    onClick={register}
+                  >
+                    Register now!
+                  </span>
+                </div>
+                <div onClick={showModal} className="cursor-pointer">
+                  Forgot password
+                </div>
+                <Modal
+                  title="Enter email to retrieve password"
+                  open={isModalOpen}
+                  onOk={handleOk}
+                  onCancel={handleCancel}
+                  okButtonProps={{ className: "bg-blue-500" }}
+                >
+                  <input
+                    type="email"
+                    name="email"
+                    value={resetPassword.email}
+                    onChange={(e) => setResetPassword(e.target.value)}
+                    // className=" rounded-md  outline-blue-500   w-full h-9 px-2 border border-slate-500 "
+                    className={` rounded-md  outline-blue-500   w-full h-9 px-2 border border-slate-500 ${
+                      errors.message
+                        ? "border border-red-500 shadow-sm shadow-red-800"
+                        : ""
+                    }`}
+                    placeholder="Enter your email"
+                  />
+                  {errors.message && (
+                    <p className="text-red-500">{errors.message}</p>
+                  )}
+                </Modal>
+              </div>
+
               <button
                 className="text-white bg-[#E25319] w-[600px] rounded-2xl h-[54px] mt-5"
                 style={{ padding: "16px 24px" }}
               >
                 Next
               </button>
-              {/* </Link> */}
             </form>
 
             <h3 className="text-white text-[30px] font-medium mt-10">
@@ -128,7 +224,10 @@ function Login() {
             <p className="text-white text-base font-medium">
               From ordering to paying, that’s all contactless
             </p>
-            <div className="flex items-center gap-2 justify-center mt-5">
+            <div
+              onClick={homePage}
+              className="flex items-center gap-2 justify-center mt-5"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="366"

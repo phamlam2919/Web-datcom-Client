@@ -32,7 +32,7 @@ function Register() {
             </button>
           </Link>
 
-          {/* <p className="text-white">
+          <p className="text-white">
                         ----------------OR----------------
                     </p>
                     <button
@@ -72,7 +72,7 @@ function Register() {
                             />
                         </svg>
                         <span>Continue with Gmail</span>
-                    </button> */}
+                    </button>
           <p className="text-white mt-4 mb-4">Sign up later</p>
           <h3 className="text-white text-[30px] font-medium">
             Full contactless experience

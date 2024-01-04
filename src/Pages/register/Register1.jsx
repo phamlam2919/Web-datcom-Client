@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 function Register1() {
   const [showPassword, setShowPassword] = useState(false);
   const [confirmPasswords, setConfirmPassword] = useState(false);
+  const [errors, setErrors] = useState({});
+  console.log("error", errors);
   const [register, setRegister] = useState({
     userName: "",
     phoneNumber: "",
@@ -23,6 +25,10 @@ function Register1() {
   const toggleConfirmPassword = () => {
     setConfirmPassword(!confirmPasswords);
   };
+
+  const homePage = () => {
+    navigate("/")
+  }
 
   const handleChange = (e) => {
     setRegister({ ...register, [e.target.name]: e.target.value });
@@ -50,6 +56,7 @@ function Register1() {
       })
       .catch((err) => {
         console.log(err);
+        // setErrors({ message: err.response.data.message });
         toast.warning(err.response.data.message);
       });
   };
@@ -93,9 +100,15 @@ function Register1() {
                   onChange={handleChange}
                   name="userName"
                   className="h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] "
+                  // className={`h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] ${
+                  //   errors.message
+                  //     ? "border border-red-500 shadow-sm shadow-red-800"
+                  //     : ""
+                  // }`}
                   style={{ padding: "12px 16px" }}
                   placeholder="Username"
                 />
+                {/* {errors.message && <p className="text-red-500">{errors.message}</p>} */}
               </div>
               <div>
                 <input
@@ -180,7 +193,7 @@ function Register1() {
                         <p className="text-white text-base font-medium">
                             From ordering to paying, that’s all contactless
                         </p> */}
-            <div className="flex items-center gap-2 justify-center mt-5">
+            <div onClick={homePage} className="flex items-center gap-2 justify-center mt-5">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="366"
