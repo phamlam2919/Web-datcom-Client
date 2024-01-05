@@ -142,9 +142,9 @@ function Order() {
                   >
                     <div className="flex gap-5 justify-between items-center">
                       <div className="flex gap-5 items-center">
-                        <div className="w-[120px]">
+                        <div className="w-[160px] h-[150px]">
                           <img
-                            className="w-full rounded-lg"
+                            className="w-full h-full rounded-lg"
                             src={food.img}
                             alt=""
                           />
@@ -157,7 +157,7 @@ function Order() {
                           <form onSubmit={handleSubmitChooseFood}>
                             <input
                               type="number"
-                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600  dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                              className="bg-gray-50 border w-[100px] border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-700 dark:border-gray-600  dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                               value={foodQuantities[food.idFood]}
                               onChange={(e) => {
                                 const newQuantity = e.target.value;
@@ -172,7 +172,12 @@ function Order() {
                                 }
                               }}
                             />
-                            <button type="submit">Xac nhan</button>
+                            <button
+                              type="submit"
+                              className="mt-3 w-[100px] h-[40px] bg-red-400 text-white rounded-lg"
+                            >
+                              Xác nhận
+                            </button>
                           </form>
                         </div>
                       </div>
