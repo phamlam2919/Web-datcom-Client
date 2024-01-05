@@ -52,7 +52,7 @@ function Homepage() {
                   <div>
                     <img
                       className="rounded-t-lg"
-                      src="https://images.deliany.co/hc-RWIJNJN5VoTqaV9pCniqjbtqBdCfWH85q_a8j2AU/rs:fill:1000:600:false/g:ce:0:0/czM6Ly9tYWZmaWFjby1jYXJhdmFuLWltYWdlcy1wcm9kdWN0aW9uL2F0dGFjaG1lbnRzL2I3YzM0YmY0LWY2NzgtNDE0Ni1iMWVlLTZiNTkwZmU4Mzk2MC0zNzk5NDE0NzktNjk4MTE1MTM5MDE3ODY0LTUyNzcyOTgzODg0OTU0Mjc1Mjctbi5qcGc.jpg"
+                      src="https://colombo.vn/upload/20922/20180814/Table-1.jpg"
                       alt=""
                     />
                   </div>

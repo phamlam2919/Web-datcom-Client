@@ -238,6 +238,8 @@ function Host() {
         onOk={handleOk1}
         onCancel={handleCancel1}
         okButtonProps={{ className: 'bg-blue-500' }}
+        visible={true}
+        footer={null}
       >
         <form onSubmit={handleSubmitCreatFood}>
           <div className="">
@@ -314,6 +316,8 @@ function Host() {
         onOk={handleOk}
         onCancel={handleCancel}
         okButtonProps={{ className: 'bg-blue-500' }}
+        visible={true}
+        footer={null}
       >
         <form onSubmit={handleSubmitEditFood}>
           <h1 className="text-2xl mb-4 font-semibold">Chỉnh sửa món ăn</h1>
@@ -334,7 +338,10 @@ function Host() {
             value={editPrice}
             onChange={(e) => setEditPrice(e.target.value)}
           />
-          <button type="submit" className="bg-red-500">
+          <button
+            type="submit"
+            className="mt-3 w-[100px] h-[40px] bg-red-400 text-white rounded-lg"
+          >
             Xác nhận
           </button>
         </form>
