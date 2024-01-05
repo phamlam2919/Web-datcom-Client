@@ -11,7 +11,7 @@ function Login() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
-  console.log("errors:", errors);
+
   const [signin, setSignin] = useState({
     email: "",
     passwords: "",
@@ -23,6 +23,7 @@ function Login() {
   const showModal = () => {
     setIsModalOpen(true);
   };
+  // lay lai mat khau
   const handleOk = () => {
     const emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
     if (!resetPassword) {
@@ -47,6 +48,7 @@ function Login() {
         console.log(err);
       });
   };
+  
   const handleCancel = () => {
     setIsModalOpen(false);
   };
@@ -65,6 +67,10 @@ function Login() {
 
   const handleChange = (e) => {
     setSignin({ ...signin, [e.target.name]: e.target.value });
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [e.target.name]: "",
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -72,17 +78,21 @@ function Login() {
     instance
       .post("auth/signin", signin)
       .then((res) => {
+        // console.log(res.data);
         localStorage.setItem("idUser", res.data.signinResult.user.idUser);
         localStorage.setItem("token", res.data.signinResult.accessToken),
+          navigate("/");
+        setTimeout(() => {
           toast.success(res.data.message);
-
-        navigate("/");
+        }, 100);
       })
       .catch((err) => {
-        console.log(err.response.data.errors);
-        setErrors(err.response.data.errors)
+        console.log(err.response.data);
+        setErrors(err.response.data.errors);
         // toast.warning(err.response.data.message);
-        if (err.response.data.message === "Tài khoản của bạn chưa xác thực") {
+        if (
+          err.response.data.errors.email === "Tài khoản của bạn chưa xác thực"
+        ) {
           // setTimeout(() => {
           navigate("/register2", { state: { email: signin.email } });
           // }, 2000);
@@ -128,32 +138,30 @@ function Login() {
                   value={email}
                   onChange={handleChange}
                   // className="h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] "
-                  className={`h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px]  ${
+                  className={`h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] px-4 ${
                     errors.email
                       ? "border border-red-500 shadow-sm shadow-red-800"
                       : ""
                   }`}
-                  style={{ padding: "12px 16px" }}
                   placeholder="Enter your email"
                 />
-                 {errors.email && (
-                    <p className="text-red-500">{errors.email}</p>
-                  )}
+                {errors.email && (
+                  <p className="text-red-500 absolute">{errors.email}</p>
+                )}
               </div>
 
-              <div className="relative">
+              <div className="relative mt-5">
                 <input
                   type={showPassword ? "text" : "password"}
                   name="passwords"
                   value={passwords}
                   onChange={handleChange}
                   // className="h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] "
-                  className={`h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px]  ${
+                  className={`h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] px-4 ${
                     errors.passwords
                       ? "border border-red-500 shadow-sm shadow-red-800"
                       : ""
                   }`}
-                  style={{ padding: "12px 16px" }}
                   placeholder="Password"
                 />
                 <div
@@ -167,11 +175,11 @@ function Login() {
                   )}
                 </div>
                 {errors.passwords && (
-                    <p className="text-red-500">{errors.passwords}</p>
-                  )}
+                  <p className="text-red-500 absolute">{errors.passwords}</p>
+                )}
               </div>
 
-              <div className="flex justify-between items-center text-white  w-full">
+              <div className="flex justify-between items-center text-white mt-4 w-full">
                 <div className="flex items-center gap-1">
                   <span>Do not have an account?</span>{" "}
                   <span

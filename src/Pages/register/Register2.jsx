@@ -10,6 +10,7 @@ function Register2() {
   const [inputValues, setInputValues] = useState(Array(6).fill(""));
   const inputRefs = Array.from({ length: 6 }, () => useRef(null));
   const [email, setEmail] = useState("");
+  const [errors, setErrors] = useState({});
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -23,6 +24,9 @@ function Register2() {
     }
 
     setInputValues(newInputValues);
+    if (value) {
+      setErrors("");
+    }
   };
 
   const handleDelete = (index, e) => {
@@ -44,7 +48,9 @@ function Register2() {
     const isAnyEmpty = inputValues.some((value) => !value.trim());
 
     if (isAnyEmpty) {
-      toast.warning("OTP không hợp lệ");
+      setErrors({
+        message: "OTP không hợp lệ",
+      });
       return;
     }
     const otp = inputValues.join("");
@@ -57,14 +63,13 @@ function Register2() {
       .post("auth/otpAuthentication", authOtp)
       .then((res) => {
         // console.log(res);
-        toast.success(res.data.message);
+        navigate("/login");
         setTimeout(() => {
-          navigate("/login");
-        }, 1500);
+          toast.success(res.data.message);
+        }, 100);
       })
       .catch((err) => {
-        // console.log(err.response.data);
-        toast.warning(err.response.data.message);
+        setErrors(err.response.data.errors);
       });
   };
 
@@ -100,8 +105,8 @@ function Register2() {
         <div className="w-1/2"></div>
         <div className="w-1/2 p-[30px] flex items-center">
           <div
-            className="bg-[#111] h-[650px] rounded-3xl flex flex-col items-center gap-4"
-            style={{ padding: "30px 40px" }}
+            className="bg-[#111] h-[650px] rounded-3xl flex flex-col items-center gap-4 px-5"
+            // style={{ padding: "30px 40px" }}
           >
             <h1 className="text-white text-4xl font-medium mt-6">
               Verify Code
@@ -112,22 +117,34 @@ function Register2() {
               in the box below to continue.
             </p>
             <form onSubmit={handleSubmit} className="">
-              <div className="flex justify-center gap-3 mt-5">
-                {inputRefs.map((inputRef, index) => (
-                  <input
-                    key={index}
-                    ref={inputRef}
-                    type="number"
-                    className="otp_input h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[50px] text-center"
-                    style={{ padding: "12px 16px" }}
-                    onChange={(e) => handleInputChange(index, e.target.value)}
-                    onKeyDown={(e) => handleDelete(index, e)}
-                    min={0}
-                    max={9}
-                  />
-                ))}
+              <div className="flex flex-col items-center relative ">
+                <div className="flex justify-center gap-3 mt-5">
+                  {inputRefs.map((inputRef, index) => (
+                    <input
+                      key={index}
+                      ref={inputRef}
+                      type="number"
+                      // className="otp_input h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[50px] text-center"
+                      className={`otp_input h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[50px] text-center ${
+                        errors.message
+                          ? "border border-red-500 shadow-sm shadow-red-800"
+                          : ""
+                      }`}
+                      style={{ padding: "12px 16px" }}
+                      onChange={(e) => handleInputChange(index, e.target.value)}
+                      onKeyDown={(e) => handleDelete(index, e)}
+                      min={0}
+                      max={9}
+                    />
+                  ))}
+                </div>
+                {errors.message && (
+                  <p className="text-red-500 absolute  -bottom-7">
+                    {errors.message}
+                  </p>
+                )}
               </div>
-              <p className="flex justify-center text-white text-base font-medium mt-5 cursor-pointer gap-1">
+              <p className="flex justify-center text-white text-base font-medium mt-10 cursor-pointer gap-1">
                 <span>Didn’t receive a code?</span>
                 <b className="text-[#FFB01D]" onClick={resetOtpCode}>
                   Resend Code
@@ -137,8 +154,8 @@ function Register2() {
               <div className="flex items-center gap-2 justify-center">
                 <Link to="/register1">
                   <button
-                    className="text-white  w-[100px] rounded-2xl h-[54px] mt-5 flex items-center gap-2"
-                    style={{ padding: "16px 24px" }}
+                    className="text-white  w-[100px] rounded-2xl h-[54px] mt-5 flex items-center gap-2 px-4"
+                    // style={{ padding: "16px 24px" }}
                   >
                     {" "}
                     <i className="fa-solid fa-arrow-left"></i>
@@ -148,11 +165,13 @@ function Register2() {
 
                 <button
                   type="submit"
-                  className="text-white bg-[#E25319] w-[500px] rounded-2xl h-[54px] mt-5"
-                  style={{ padding: "16px 24px" }}
+                  className="text-white bg-[#E25319] w-96 rounded-2xl h-[54px] mt-5"
                 >
                   Next
                 </button>
+                <p className="text-white  w-[100px] rounded-2xl h-[54px] mt-5 flex items-center gap-2 px-4">
+                  {" "}
+                </p>
               </div>
             </form>
 

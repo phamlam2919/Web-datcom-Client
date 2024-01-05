@@ -18,7 +18,11 @@ function Profile() {
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [profileUser, setProfileUser] = useState("");
-  const [updateUserName, setUpdateUserName] = useState("");
+  const [updateUserName, setUpdateUserName] = useState({
+    userName: "",
+  });
+  console.log("updateUserName:", updateUserName)
+
   const [imageUrls, setImageUrls] = useState([]);
   const [downloadUrls, setDownloadUrls] = useState([]);
 
@@ -50,6 +54,18 @@ function Profile() {
 
   const changePassword = (e) => {
     setChangePasswords({ ...changePasswords, [e.target.name]: e.target.value });
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [e.target.name]: "",
+    }));
+  };
+
+  const handleChangeUserName = (e) => {
+    setUpdateUserName({ ...updateUserName, [e.target.name]: e.target.value });
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [e.target.name]: "",
+    }));
   };
 
   useEffect(() => {
@@ -65,13 +81,13 @@ function Profile() {
 
   // update user name
   const handleOk = () => {
-    if (!updateUserName) {
+    if (!updateUserName.userName) {
       setErrors({ message: "Không được để trống" });
       return;
     }
     if (
-      updateUserName.length < 5 ||
-      updateUserName[0] !== updateUserName[0].toUpperCase()
+      updateUserName.userName.length < 5 ||
+      updateUserName.userName[0] !== updateUserName.userName[0].toUpperCase()
     ) {
       setErrors({
         message:
@@ -80,15 +96,18 @@ function Profile() {
       return;
     }
 
+    const headers = { Authorization: `Bearer ${token}` };
+
     const nameUpdate = {
-      userName: updateUserName,
+      userName: updateUserName.userName,
     };
     instance
-      .patch(`users/updateUserName/${idUser}`, nameUpdate)
+      .patch(`users/updateUserName/${idUser}`, nameUpdate, {headers})
       .then((res) => {
+        console.log("res:", res)
         setProfileUser((prevUser) => ({
           ...prevUser,
-          userName: updateUserName,
+          userName: updateUserName.userName,
         }));
         setIsModalOpen(false);
       })
@@ -114,29 +133,49 @@ function Profile() {
   const showModal1 = () => {
     setIsModalOpen1(true);
   };
+
+  // đổi mk
   const handleOk1 = () => {
-    if (newPassword !== confirmNewPassword) {
-      toast.warning("Mật khẩu không trùng khớp");
-      return;
-    } else {
-      const headers = { Authorization: `Bearer ${token}` };
-      const formChangePassword = {
-        email: profileUser.email,
-        passwords,
-        newPassword,
-      };
-      instance
-        .post("users/changePassword", formChangePassword, { headers })
-        .then((res) => {
-          console.log(res);
-          setIsModalOpen1(false);
-        })
-        .catch((err) => {
-          console.log(err);
-          toast.warning(err.response.data.message);
-        });
+    if (!passwords) {
+      setErrors({
+        errors: { passwords: "Không được để trống." },
+      });
     }
+    if (!newPassword) {
+      setErrors({
+        errors: { newPassword: "Không được để trống." },
+      });
+    }
+    if (!confirmNewPassword) {
+      setErrors({
+        errors: { confirmNewPassword: "Không được để trống." },
+      });
+    }
+    const headers = { Authorization: `Bearer ${token}` };
+    const formChangePassword = {
+      email: profileUser.email,
+      passwords,
+      newPassword,
+    };
+    instance
+      .post("users/changePassword", formChangePassword, { headers })
+      .then((res) => {
+        setChangePasswords({
+          email: "",
+          passwords: "",
+          newPassword: "",
+          confirmNewPassword: "",
+        });
+        toast.success(res.data.message);
+        setIsModalOpen1(false);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+        setErrors(err.response.data.errors);
+        // toast.warning(err.response.data.message);
+      });
   };
+
   const handleCancel1 = () => {
     setIsModalOpen1(false);
   };
@@ -147,6 +186,10 @@ function Profile() {
 
   // update avatar
   const handleOk2 = () => {
+    if (downloadUrls == 0) {
+      toast.warning("ảnh không được để trống");
+      return;
+    }
     Promise.all(
       imageUrls.map((file) => {
         const imageRef = ref(store, `imagesUsers/${file.name + uuidv4()}`);
@@ -155,17 +198,17 @@ function Profile() {
         });
       })
     ).then((response) => {
-      // Cập nhật state downloadUrls với mảng đường link của ảnh
       setDownloadUrls(response);
 
-      // Tiếp tục thực hiện lưu dữ liệu hoặc các thao tác khác theo nhu cầu của bạn
       const formUpload = {
-        avatarUser: response, // Cập nhật avatarUser với mảng đường link của ảnh
+        avatarUser: response,
       };
+
+      const headers = { Authorization: `Bearer ${token}` };
 
       if (imageUrls.length > 0) {
         instance
-          .patch(`users/updateAvatarUser/${idUser}`, formUpload)
+          .patch(`users/updateAvatarUser/${idUser}`, formUpload, { headers })
           .then((res) => {
             console.log(res.data);
             setProfileUser((prevUser) => ({
@@ -282,9 +325,9 @@ function Profile() {
             <h2 className="text-lg mb-1">User Name:</h2>
             <Input
               placeholder="Họ và tên"
-              value={updateUserName}
+              value={updateUserName.userName}
               name="userName"
-              onChange={(e) => setUpdateUserName(e.target.value)}
+              onChange={handleChangeUserName}
               className={`rounded-md outline-blue-500 w-full h-9 px-2 border border-slate-500 ${
                 errors.message
                   ? "border border-red-500 shadow-sm shadow-red-800"
@@ -312,7 +355,11 @@ function Profile() {
               onChange={changePassword}
               name="passwords"
               value={passwords}
+              className={errors.passwords ? "border border-red-500 " : ""}
             />
+            {errors.passwords && (
+              <p className="text-red-500 absolute">{errors.passwords}</p>
+            )}
           </div>
           <div className="mb-3">
             <h2 className="text-lg mb-1">Mật khẩu mới:</h2>
@@ -320,7 +367,11 @@ function Profile() {
               onChange={changePassword}
               name="newPassword"
               value={newPassword}
+              className={errors.newPassword ? "border border-red-500 " : ""}
             />
+            {errors.newPassword && (
+              <p className="text-red-500 absolute">{errors.newPassword}</p>
+            )}
           </div>
           <div className="mb-7">
             <h2 className="text-lg mb-1">Xác nhận mật khẩu:</h2>
@@ -328,7 +379,15 @@ function Profile() {
               onChange={changePassword}
               name="confirmNewPassword"
               value={confirmNewPassword}
+              className={
+                errors.confirmNewPassword ? "border border-red-500 " : ""
+              }
             />
+            {errors.confirmNewPassword && (
+              <p className="text-red-500 absolute">
+                {errors.confirmNewPassword}
+              </p>
+            )}
           </div>
         </div>
       </Modal>

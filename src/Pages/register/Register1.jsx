@@ -27,11 +27,18 @@ function Register1() {
   };
 
   const homePage = () => {
-    navigate("/")
-  }
+    navigate("/");
+  };
 
   const handleChange = (e) => {
-    setRegister({ ...register, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    setRegister({ ...register, [name]: value });
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "", 
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -42,22 +49,22 @@ function Register1() {
       .post("auth/signup", register)
       .then((res) => {
         console.log(res);
-        toast.success(res.data.message);
+        setRegister({
+          userName: "",
+          phoneNumber: "",
+          email: "",
+          passwords: "",
+          confirmPassword: "",
+        });
+        navigate("/register2", { state: { email: register.email } });
         setTimeout(() => {
-          setRegister({
-            userName: "",
-            phoneNumber: "",
-            email: "",
-            passwords: "",
-            confirmPassword: "",
-          });
-          navigate("/register2", { state: { email: register.email } });
-        }, 2000);
+          toast.success(res.data.message);
+        }, 500);
       })
       .catch((err) => {
         console.log(err);
-        // setErrors({ message: err.response.data.message });
-        toast.warning(err.response.data.message);
+        setErrors(err.response.data.errors);
+        // toast.warning(err.response.data.message);
       });
   };
 
@@ -99,92 +106,124 @@ function Register1() {
                   value={userName}
                   onChange={handleChange}
                   name="userName"
-                  className="h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] "
-                  // className={`h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] ${
-                  //   errors.message
-                  //     ? "border border-red-500 shadow-sm shadow-red-800"
-                  //     : ""
-                  // }`}
-                  style={{ padding: "12px 16px" }}
+                  // className="h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] "
+                  className={`h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] px-4 ${
+                    errors.userName
+                      ? "border border-red-500 shadow-sm shadow-red-800"
+                      : ""
+                  }`}
                   placeholder="Username"
                 />
-                {/* {errors.message && <p className="text-red-500">{errors.message}</p>} */}
+                {errors.userName && (
+                  <p className="text-red-500 absolute">{errors.userName}</p>
+                )}
               </div>
-              <div>
+              <div className="mt-4">
                 <input
                   type="email"
                   value={email}
                   name="email"
                   onChange={handleChange}
-                  className="h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] "
-                  style={{ padding: "12px 16px" }}
+                  // className="h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] "
+                  className={`h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] px-4 ${
+                    errors.email
+                      ? "border border-red-500 shadow-sm shadow-red-800"
+                      : ""
+                  }`}
                   placeholder="Enter your email"
                 />
+                {errors.email && (
+                  <p className="text-red-500 absolute">{errors.email}</p>
+                )}
               </div>
-              <div>
+              <div className="mt-4">
                 <input
                   type="number"
                   value={phoneNumber}
                   name="phoneNumber"
                   onChange={handleChange}
-                  className="otp_input h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] "
-                  style={{ padding: "12px 16px" }}
+                  // className="otp_input h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] "
+                  className={`otp_input h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] px-4 ${
+                    errors.phoneNumber
+                      ? "border border-red-500 shadow-sm shadow-red-800"
+                      : ""
+                  }`}
                   placeholder="Phone Number"
-                  // autoComplete="tel"
                 />
+                {errors.phoneNumber && (
+                  <p className="text-red-500 absolute">{errors.phoneNumber}</p>
+                )}
               </div>
               {/* ---------------------------------------------------------------------------- */}
-              <div className="relative">
-                <input
-                  value={passwords}
-                  name="passwords"
-                  onChange={handleChange}
-                  type={showPassword ? "text" : "password"}
-                  className="input-style px-4 h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px]"
-                  placeholder="Password"
-                  autoComplete="new-password"
-                />
-                <div
-                  className="absolute inset-y-0 right-0 flex items-center pr-2 cursor-pointer"
-                  onClick={togglePassword}
-                >
-                  {showPassword ? (
-                    <i className="fa-regular fa-eye text-gray-200"></i>
-                  ) : (
-                    <i className="fa-regular fa-eye-slash text-gray-200"></i>
-                  )}
+              <div className="mt-4">
+                <div className="relative">
+                  <input
+                    value={passwords}
+                    name="passwords"
+                    onChange={handleChange}
+                    type={showPassword ? "text" : "password"}
+                    // className="input-style px-4 h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px]"
+                    className={`input-style h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] px-4 ${
+                      errors.passwords
+                        ? "border border-red-500 shadow-sm shadow-red-800"
+                        : ""
+                    }`}
+                    placeholder="Password"
+                  />
+
+                  <div
+                    className="absolute inset-y-0 right-0 flex items-center pr-2 cursor-pointer"
+                    onClick={togglePassword}
+                  >
+                    {showPassword ? (
+                      <i className="fa-regular fa-eye text-gray-200"></i>
+                    ) : (
+                      <i className="fa-regular fa-eye-slash text-gray-200"></i>
+                    )}
+                  </div>
                 </div>
+                {errors.passwords && (
+                  <p className="text-red-500 absolute">{errors.passwords}</p>
+                )}
               </div>
 
-              <div className="relative">
-                <input
-                  value={confirmPassword}
-                  name="confirmPassword"
-                  onChange={handleChange}
-                  type={confirmPasswords ? "text" : "password"}
-                  className="input-style px-4 h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px]"
-                  placeholder="Confirm password"
-                  autoComplete="new-password"
-                />
-                <div
-                  className="absolute inset-y-0 right-0 flex items-center pr-2 cursor-pointer"
-                  onClick={toggleConfirmPassword}
-                >
-                  {confirmPasswords ? (
-                    <i className="fa-regular fa-eye text-gray-200"></i>
-                  ) : (
-                    <i className="fa-regular fa-eye-slash text-gray-200"></i>
-                  )}
+              <div className="mt-4">
+                <div className="relative">
+                  <input
+                    value={confirmPassword}
+                    name="confirmPassword"
+                    onChange={handleChange}
+                    type={confirmPasswords ? "text" : "password"}
+                    // className="input-style px-4 h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px]"
+                    className={`input-style h-[54px] rounded-2xl bg-[#3A3A3A] text-white w-[600px] px-4 ${
+                      errors.confirmPassword
+                        ? "border border-red-500 shadow-sm shadow-red-800"
+                        : ""
+                    }`}
+                    placeholder="Confirm password"
+                  />
+
+                  <div
+                    className="absolute inset-y-0 right-0 flex items-center pr-2 cursor-pointer"
+                    onClick={toggleConfirmPassword}
+                  >
+                    {confirmPasswords ? (
+                      <i className="fa-regular fa-eye text-gray-200"></i>
+                    ) : (
+                      <i className="fa-regular fa-eye-slash text-gray-200"></i>
+                    )}
+                  </div>
                 </div>
+                {errors.confirmPassword && (
+                  <p className="text-red-500 absolute">
+                    {errors.confirmPassword}
+                  </p>
+                )}
               </div>
-              {/* <Link to="/register2"> */}
-              <button
-                className="text-white bg-[#E25319] w-[600px] rounded-2xl h-[54px] mt-5"
-                style={{ padding: "16px 24px" }}
-              >
+
+              <button className="text-white bg-[#E25319] w-[600px] rounded-2xl h-[54px] mt-5">
                 Next
               </button>
-              {/* </Link> */}
             </form>
 
             {/* <h3 className="text-white text-[30px] font-medium mt-10">
@@ -193,7 +232,10 @@ function Register1() {
                         <p className="text-white text-base font-medium">
                             From ordering to paying, that’s all contactless
                         </p> */}
-            <div onClick={homePage} className="flex items-center gap-2 justify-center mt-5">
+            <div
+              onClick={homePage}
+              className="flex items-center gap-2 justify-center mt-5"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="366"

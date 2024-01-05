@@ -14,6 +14,7 @@ function Homepage() {
   const token = localStorage.getItem("token");
   const idUser = localStorage.getItem("idUser");
   const [profileUser, setProfileUser] = useState("");
+
   const loadUser = () => {
     const headers = { Authorization: `Bearer ${token}` };
     instance
@@ -32,7 +33,10 @@ function Homepage() {
 
   const loadHost = async () => {
     if (!token) {
-      console.log("Không tìm thấy mã thông báo");
+      toast.warning("Đăng nhập không hợp lệ.");
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
       return;
     }
 
@@ -49,7 +53,6 @@ function Homepage() {
         }, 2000);
         localStorage.removeItem("token");
         localStorage.removeItem("idUser");
-        // localStorage.removeItem("userName");
       }
     }
   };
