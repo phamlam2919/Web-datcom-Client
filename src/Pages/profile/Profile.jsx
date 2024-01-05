@@ -136,21 +136,21 @@ function Profile() {
 
   // đổi mk
   const handleOk1 = () => {
-    if (!passwords) {
-      setErrors({
-        errors: { passwords: "Không được để trống." },
-      });
-    }
-    if (!newPassword) {
-      setErrors({
-        errors: { newPassword: "Không được để trống." },
-      });
-    }
-    if (!confirmNewPassword) {
-      setErrors({
-        errors: { confirmNewPassword: "Không được để trống." },
-      });
-    }
+    // if (!passwords) {
+    //   setErrors({
+    //     errors: { passwords: "Không được để trống." },
+    //   });
+    // }
+    // if (!newPassword) {
+    //   setErrors({
+    //     errors: { newPassword: "Không được để trống." },
+    //   });
+    // }
+    // if (!confirmNewPassword) {
+    //   setErrors({
+    //     errors: { confirmNewPassword: "Không được để trống." },
+    //   });
+    // }
     const headers = { Authorization: `Bearer ${token}` };
     const formChangePassword = {
       email: profileUser.email,
