@@ -1,7 +1,47 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import image from "../register/image.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { auth, provider } from "../../firebase/authGoogle";
+import { signInWithPopup } from "firebase/auth";
+import instance from "../../api/axios";
 function Register() {
+  const navigate = useNavigate();
+
+  const homePage = () => {
+    navigate("/");
+  };
+
+  const handleClick = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+
+      // console.log("idToken:", idToken)
+      const authGoogle = {
+        idUser: result.user.uid,
+        userName: result.user.displayName,
+        phoneNumber: result.user.phoneNumber,
+        email: result.user.email,
+        avatarUser: result.user.photoURL,
+      };
+
+
+      await instance
+        .post("auth/signinGoogle", authGoogle)
+        .then((res) => {
+          console.log(res);
+
+          localStorage.setItem("idUser", res.data.signinResult.user.idUser);
+          localStorage.setItem("token", res.data.signinResult.accessToken);
+          navigate("/");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+    } catch (error) {
+      console.error("Lỗi khi đăng nhập bằng Google:", error);
+    }
+  };
   return (
     <div
       className="flex h-screen"
@@ -10,15 +50,14 @@ function Register() {
       }}
     >
       <div className="w-1/2"></div>
-      <div className="w-1/2 p-[30px] flex items-center">
+      <div className="w-1/2 p-8 flex items-center ">
         <div
-          className="bg-[#111] h-[650px] rounded-3xl flex flex-col items-center gap-4"
-          style={{ padding: "30px 40px" }}
+          className="bg-[#111] rounded-3xl flex flex-col items-center gap-4 py-8 px-10"
         >
-          <h1 className="text-white text-4xl font-medium mt-10 ">
+          <h1 className="text-white text-4xl font-medium">
             Let’s Get Started
           </h1>
-          <p className="text-[#EAEAEF] text-center text-base font-medium flex flex-col justify-center w-[388px]">
+          <p className="text-[#EAEAEF] text-center text-base font-medium flex flex-col justify-center ">
             Sign up or login into to have a full digital experience in our
             restaurant
           </p>
@@ -26,53 +65,51 @@ function Register() {
           <Link to="/register1">
             <button
               className="text-white bg-[#E25319] w-[600px] rounded-2xl h-[54px] mt-10"
-              style={{ padding: "16px 24px" }}
             >
               Get Started
             </button>
           </Link>
 
-          <p className="text-white">
-                        ----------------OR----------------
-                    </p>
-                    <button
-                        className="text-white bg-[#1D1D1D] w-[600px] rounded-2xl h-[54px] flex items-center justify-center gap-3"
-                        style={{ padding: "16px 24px" }}
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="19"
-                            height="19"
-                            viewBox="0 0 19 19"
-                            fill="none"
-                        >
-                            <path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
-                                d="M18.3 9.49025C18.3 8.84024 18.2417 8.21524 18.1333 7.61523H9.5V11.1611H14.4333C14.2208 12.3069 13.575 13.2778 12.6042 13.9278V16.2278H15.5667C17.3 14.6319 18.3 12.2819 18.3 9.49025Z"
-                                fill="#4285F4"
-                            />
-                            <path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
-                                d="M9.50026 18.4485C11.9753 18.4485 14.0503 17.6276 15.5669 16.2276L12.6044 13.9276C11.7836 14.4776 10.7336 14.8026 9.50026 14.8026C7.11276 14.8026 5.09193 13.1901 4.37109 11.0234H1.30859V13.3985C2.81693 16.3943 5.91693 18.4485 9.50026 18.4485Z"
-                                fill="#34A853"
-                            />
-                            <path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
-                                d="M4.371 11.0234C4.18766 10.4734 4.0835 9.8859 4.0835 9.28173C4.0835 8.67756 4.18766 8.09006 4.371 7.54005V5.16504H1.3085C0.687663 6.40255 0.333496 7.80256 0.333496 9.28173C0.333496 10.7609 0.687663 12.1609 1.3085 13.3984L4.371 11.0234Z"
-                                fill="#FBBC05"
-                            />
-                            <path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
-                                d="M9.50026 3.76109C10.8461 3.76109 12.0544 4.22359 13.0044 5.13193L15.6336 2.50275C14.0461 1.02357 11.9711 0.115234 9.50026 0.115234C5.91693 0.115234 2.81693 2.16941 1.30859 5.16527L4.37109 7.54028C5.09193 5.3736 7.11276 3.76109 9.50026 3.76109Z"
-                                fill="#EA4335"
-                            />
-                        </svg>
-                        <span>Continue with Gmail</span>
-                    </button>
+          <p className="text-white">----------------OR----------------</p>
+          <button
+            onClick={handleClick}
+            className="text-white bg-[#1D1D1D] w-[600px] rounded-2xl h-[54px] flex items-center justify-center gap-3"
+            style={{ padding: "16px 24px" }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="19"
+              height="19"
+              viewBox="0 0 19 19"
+              fill="none"
+            >
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M18.3 9.49025C18.3 8.84024 18.2417 8.21524 18.1333 7.61523H9.5V11.1611H14.4333C14.2208 12.3069 13.575 13.2778 12.6042 13.9278V16.2278H15.5667C17.3 14.6319 18.3 12.2819 18.3 9.49025Z"
+                fill="#4285F4"
+              />
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M9.50026 18.4485C11.9753 18.4485 14.0503 17.6276 15.5669 16.2276L12.6044 13.9276C11.7836 14.4776 10.7336 14.8026 9.50026 14.8026C7.11276 14.8026 5.09193 13.1901 4.37109 11.0234H1.30859V13.3985C2.81693 16.3943 5.91693 18.4485 9.50026 18.4485Z"
+                fill="#34A853"
+              />
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M4.371 11.0234C4.18766 10.4734 4.0835 9.8859 4.0835 9.28173C4.0835 8.67756 4.18766 8.09006 4.371 7.54005V5.16504H1.3085C0.687663 6.40255 0.333496 7.80256 0.333496 9.28173C0.333496 10.7609 0.687663 12.1609 1.3085 13.3984L4.371 11.0234Z"
+                fill="#FBBC05"
+              />
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M9.50026 3.76109C10.8461 3.76109 12.0544 4.22359 13.0044 5.13193L15.6336 2.50275C14.0461 1.02357 11.9711 0.115234 9.50026 0.115234C5.91693 0.115234 2.81693 2.16941 1.30859 5.16527L4.37109 7.54028C5.09193 5.3736 7.11276 3.76109 9.50026 3.76109Z"
+                fill="#EA4335"
+              />
+            </svg>
+            <span>Continue with Gmail</span>
+          </button>
           <p className="text-white mt-4 mb-4">Sign up later</p>
           <h3 className="text-white text-[30px] font-medium">
             Full contactless experience
@@ -80,7 +117,10 @@ function Register() {
           <p className="text-white text-base font-medium">
             From ordering to paying, that’s all contactless
           </p>
-          <div className="flex items-center gap-2 justify-center mt-3">
+          <div
+            onClick={homePage}
+            className="flex items-center gap-2 justify-center mt-3"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="366"

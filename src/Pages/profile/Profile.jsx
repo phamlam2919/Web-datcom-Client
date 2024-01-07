@@ -21,7 +21,6 @@ function Profile() {
   const [updateUserName, setUpdateUserName] = useState({
     userName: "",
   });
-  console.log("updateUserName:", updateUserName)
 
   const [imageUrls, setImageUrls] = useState([]);
   const [downloadUrls, setDownloadUrls] = useState([]);
@@ -104,7 +103,7 @@ function Profile() {
     instance
       .patch(`users/updateUserName/${idUser}`, nameUpdate, {headers})
       .then((res) => {
-        console.log("res:", res)
+        // console.log("res:", res)
         setProfileUser((prevUser) => ({
           ...prevUser,
           userName: updateUserName.userName,
@@ -136,21 +135,7 @@ function Profile() {
 
   // đổi mk
   const handleOk1 = () => {
-    // if (!passwords) {
-    //   setErrors({
-    //     errors: { passwords: "Không được để trống." },
-    //   });
-    // }
-    // if (!newPassword) {
-    //   setErrors({
-    //     errors: { newPassword: "Không được để trống." },
-    //   });
-    // }
-    // if (!confirmNewPassword) {
-    //   setErrors({
-    //     errors: { confirmNewPassword: "Không được để trống." },
-    //   });
-    // }
+
     const headers = { Authorization: `Bearer ${token}` };
     const formChangePassword = {
       email: profileUser.email,
